@@ -66,4 +66,6 @@ use {
         require('Comment').setup()
     end
 }
+use 'nanozuki/tabby.nvim'
+--use 'freddiehaddad/feline.nvim'
 end)
