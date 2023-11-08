@@ -50,7 +50,6 @@ use {
   requires = { 'nvim-tree/nvim-web-devicons', opt = true }
 }
 use('RRethy/vim-illuminate')
-require('illuminate').configure(config)
 use {
     'goolord/alpha-nvim',
     config = function ()
@@ -67,7 +66,7 @@ use {
     end
 }
 use 'nanozuki/tabby.nvim'
---use 'freddiehaddad/feline.nvim'
+use 'freddiehaddad/feline.nvim'
 -- Lua
 use {
   "folke/which-key.nvim",
@@ -81,4 +80,9 @@ use {
     }
   end
 }
+use 'luukvbaal/statuscol.nvim'
+use {'akinsho/bufferline.nvim', tag = "*", requires = 'nvim-tree/nvim-web-devicons'}
+use "EdenEast/nightfox.nvim"
+use 'yamatsum/nvim-cursorline'
+use 'lewis6991/gitsigns.nvim'
 end)
