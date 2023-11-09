@@ -85,4 +85,5 @@ use {'akinsho/bufferline.nvim', tag = "*", requires = 'nvim-tree/nvim-web-devico
 use "EdenEast/nightfox.nvim"
 use 'yamatsum/nvim-cursorline'
 use 'lewis6991/gitsigns.nvim'
+use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 end)

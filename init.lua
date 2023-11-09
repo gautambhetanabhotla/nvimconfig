@@ -15,6 +15,7 @@ require "core.feline"
 require "core.bufferline"
 require "core.cursorline"
 require "core.gitsigns"
+require "core.ufo"
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
