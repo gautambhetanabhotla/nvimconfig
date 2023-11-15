@@ -19,6 +19,15 @@ lsp.ensure_installed({
 lsp.nvim_workspace()
 
 
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+require('lspconfig').clangd.setup {
+  on_attach = on_attach,
+  capabilities = cmp_nvim_lsp.default_capabilities(),
+  cmd = {
+	  "clangd",
+	  "--offset-encoding=utf-16",
+  },
+}
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -65,3 +74,4 @@ lsp.setup()
 vim.diagnostic.config({
     virtual_text = true
 })
+
