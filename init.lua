@@ -17,6 +17,7 @@ require "core.cursorline"
 require "core.gitsigns"
 require "core.ufo"
 require "core.clangd"
+require "core.toggleterm"
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1

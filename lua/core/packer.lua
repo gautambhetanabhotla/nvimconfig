@@ -86,4 +86,7 @@ use "EdenEast/nightfox.nvim"
 use 'yamatsum/nvim-cursorline'
 use 'lewis6991/gitsigns.nvim'
 use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
+use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+  require("toggleterm").setup()
+end}
 end)
