@@ -26,6 +26,8 @@ local handler = function(virtText, lnum, endLnum, width, truncate)
     return newVirtText
 end
 
+vim.o.foldlevelstart = 99
+
 -- global handler
 -- `handler` is the 2nd parameter of `setFoldVirtTextHandler`,
 -- check out `./lua/ufo.lua` and search `setFoldVirtTextHandler` for detail.

@@ -1,7 +1,7 @@
 require "core.comment"
 require "core.copilot"
 require "core.lsp"
----require "core.lualine"
+-- require "core.lualine"
 require "core.nvimtree"
 require "core.packer"
 require "core.remap"
@@ -18,6 +18,11 @@ require "core.gitsigns"
 require "core.ufo"
 require "core.clangd"
 require "core.toggleterm"
+-- require "core.tabby"
+require "core.whichkey"
+require "core.autopairs"
+require "core.noice"
+require "core.symbolsoutline"
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1

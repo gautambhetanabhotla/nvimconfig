@@ -1,77 +1,163 @@
-local lsp = require("lsp-zero")
+require("mason").setup()
+require("mason-lspconfig").setup()
 
-lsp.preset("recommended")
-
-lsp.ensure_installed({
-  'clangd',
-  'lua_ls',
-  'pyright',
-  'texlab',
-  'zk',
-  'fennel_language_server',
-  'cssls',
-  'grammarly',
-  'html',
-  'bashls'
-})
-
--- Fix Undefined global 'vim'
-lsp.nvim_workspace()
-
-
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
-require('lspconfig').clangd.setup {
-  on_attach = on_attach,
-  capabilities = cmp_nvim_lsp.default_capabilities(),
-  cmd = {
-	  "clangd",
-	  "--offset-encoding=utf-16",
+require("lspconfig").clangd.setup({
+opts = {
+  servers = {
+    -- Ensure mason installs the server
+    clangd = {
+      keys = {
+        { "<leader>cR", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
+      },
+      root_dir = function(fname)
+        return require("lspconfig.util").root_pattern(
+          "Makefile",
+          "configure.ac",
+          "configure.in",
+          "config.h.in",
+          "meson.build",
+          "meson_options.txt",
+          "build.ninja"
+        )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(
+          fname
+        ) or require("lspconfig.util").find_git_ancestor(fname)
+      end,
+      capabilities = {
+        offsetEncoding = { "utf-8" },
+      },
+      cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=llvm",
+      },
+      init_options = {
+        usePlaceholders = true,
+        completeUnimported = true,
+        clangdFileStatus = true,
+      },
+    },
+  },
+  setup = {
+    clangd = function(_, opts)
+      local clangd_ext_opts = require("lazyvim.util").opts("clangd_extensions.nvim")
+      require("clangd_extensions").setup(vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = opts }))
+      return false
+    end,
   },
 }
-local cmp = require('cmp')
-local cmp_select = {behavior = cmp.SelectBehavior.Select}
-local cmp_mappings = lsp.defaults.cmp_mappings({
-  ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-  ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-  ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  ["<C-Space>"] = cmp.mapping.complete(),
 })
 
-cmp_mappings['<Tab>'] = nil
-cmp_mappings['<S-Tab>'] = nil
-
-lsp.setup_nvim_cmp({
-  mapping = cmp_mappings
+require("lspconfig").lua_ls.setup({
+  settings = {
+	Lua = {
+	  diagnostics = {
+		globals = { "vim" },
+	  },
+	  workspace = {
+		library = {
+		  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+		  [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+		},
+	  },
+	},
+  },
 })
 
-lsp.set_preferences({
-    suggest_lsp_servers = false,
-    sign_icons = {
-        error = 'E',
-        warn = 'W',
-        hint = 'H',
-        info = 'I'
-    }
+require("lspconfig").pyright.setup({
+  settings = {
+	python = {
+	  analysis = {
+		autoSearchPaths = true,
+		useLibraryCodeForTypes = true,
+		diagnosticMode = "workspace",
+		typeCheckingMode = "basic",
+		venvPath = "~/.virtualenvs",
+		venv = "pyright",
+	  },
+	},
+  },
 })
 
-lsp.on_attach(function(client, bufnr)
-  local opts = {buffer = bufnr, remap = false}
-
-  vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-  vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-  vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-  vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-  vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-  vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-  vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-  vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-  vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-  vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end)
-
-lsp.setup()
-
-vim.diagnostic.config({
-    virtual_text = true
+require("lspconfig").rust_analyzer.setup({
+  settings = {
+	["rust-analyzer"] = {
+	  cargo = {
+		loadOutDirsFromCheck = true,
+	  },
+	  procMacro = {
+		enable = true,
+	  },
+	  checkOnSave = {
+		command = "clippy",
+	  },
+	},
+  },
 })
 
+require("lspconfig").powershell_es.setup({
+  settings = {
+	powershell = {
+	  scriptAnalysis = {
+		enable = true,
+	  },
+	},
+  },
+})
+
+require("lspconfig").neocmake.setup({
+  cmd = { "neocmake" },
+  filetypes = { "cmake" },
+  root_dir = require("lspconfig.util").root_pattern("CMakeLists.txt", "compile_commands.json", ".git"),
+})
+
+require("lspconfig").marksman.setup({
+  cmd = { "marksman" },
+  filetypes = { "markdown" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").texlab.setup({
+  cmd = { "texlab" },
+  filetypes = { "tex", "bib" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").jsonls.setup({
+  cmd = { "vscode-json-languageserver", "--stdio" },
+  filetypes = { "json" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").bashls.setup({
+  cmd = { "bash-language-server", "start" },
+  filetypes = { "sh", "zsh" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").fennel_language_server.setup({
+  cmd = { "fennel-language-server" },
+  filetypes = { "fennel" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").html.setup({
+  cmd = { "html-languageserver", "--stdio" },
+  filetypes = { "html" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").cssls.setup({
+  cmd = { "css-languageserver", "--stdio" },
+  filetypes = { "css" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").grammarly.setup({
+  cmd = { "grammarly", "lsp" },
+  filetypes = { "markdown", "tex", "text" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
