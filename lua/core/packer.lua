@@ -75,4 +75,7 @@ use "rcarriga/nvim-notify"
 use "MunifTanjim/nui.nvim"
 use "folke/noice.nvim"
 use 'simrat39/symbols-outline.nvim'
+use 'folke/tokyonight.nvim'
+use 'cocopon/iceberg.vim'
+use 'xiyaowong/transparent.nvim'
 end)
