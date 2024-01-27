@@ -161,3 +161,15 @@ require("lspconfig").grammarly.setup({
   filetypes = { "markdown", "tex", "text" },
   root_dir = require("lspconfig.util").root_pattern(".git"),
 })
+
+require("lspconfig").intelephense.setup({
+  cmd = { "intelephense", "--stdio" },
+  filetypes = { "php" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})
+
+require("lspconfig").prettierd.setup({
+  cmd = { "prettierd", "--stdio" },
+  filetypes = { "javascript", "typescript", "json", "yaml", "markdown", "html", "css", "scss", "less" },
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+})

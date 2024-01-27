@@ -12,5 +12,5 @@ set.softtabstop = 4
 set.shiftwidth = 4
 
 -- vim.opt.background = "dark" -- set this to dark or light
-vim.cmd 'colorscheme material'
-vim.g.material_style = "deep ocean"
+vim.cmd 'colorscheme oxocarbon'
+-- vim.g.material_style = "deep ocean"
